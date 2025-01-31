@@ -1,0 +1,201 @@
+ID,Metratura,Max persone,Indirizzo,latitudine,longitudine
+1,169,8,"Stretto Milena, 12, 36100, Anconetta (VI)",45.5661,11.5686
+2,166,8,"Vicolo Letizia, 66 Piano 7, 87022, Sant'Angelo Di Cetraro (CS)",39.55521,15.95348
+3,184,7,"Via Mastroianni, 8 Appartamento 34, 22045, Lambrugo (CO)",45.75779,9.24152
+4,65,9,"Strada Persico, 3, 36040, Valdastico (VI)",45.86633,11.36133
+5,32,7,"Canale Comencini, 38048, Sover (TN)",46.22238,11.31401
+6,136,8,"Incrocio Benedetto, 1, 28891, Cesara (VB)",45.83491,8.36602
+7,89,5,"Via Federico, 555 Appartamento 24, 60013, Corinaldo (AN)",43.65495,13.04615
+8,48,8,"Borgo Zetticci, 21 Piano 6, 23021, Fraciscio (SO)",46.40326,9.36259
+9,59,1,"Piazza Alberico, 25, 33016, Pontebba (UD)",46.5067,13.30672
+10,158,6,"Contrada Salvini, 63, 50041, Settimello (FI)",43.8499,11.18258
+11,175,9,"Piazza Federigo, 73 Appartamento 39, 55036, Pieve Fosciana (LU)",44.13445,10.41504
+12,197,1,"Contrada Mannoia, 4 Appartamento 96, 34148, Trieste (TS)",45.67285,13.75984
+13,130,3,"Stretto Greggio, 945, 73025, Martano (LE)",40.20311,18.30479
+14,129,9,"Incrocio Elmo, 149, 84126, Salerno (SA)",40.67727,14.76485
+15,21,6,"Contrada Spallanzani, 16, 20142, Milano (MI)",45.47593,9.20747
+16,65,6,"Strada Fornaciari, 215, 08012, Mulargia (NU)",40.29377,8.79326
+17,142,10,"Viale Biagio, 0, 00146, Roma (RM)",41.91678,12.50941
+18,170,2,"Piazza Trupiano, 643, 27014, Corteolona (PV)",45.15697,9.36982
+19,107,2,"Rotonda Treccani, 39032, Moehlen In Taufer (BZ)",46.90095,11.94111
+20,142,10,"Strada Giunti, 5 Appartamento 12, 31043, Fontanelle (TV)",45.83352,12.47114
+21,106,6,"Viale Flavio, 6, 03030, Rocca D'Arce (FR)",41.58627,13.58662
+22,51,8,"Incrocio Scaramucci, 475, 64020, Petriccione (TE)",42.69929,13.83713
+23,30,5,"Piazza Giorgio, 6, 35122, Padova (PD)",45.38553,11.89209
+24,187,5,"Borgo Serao, 31 Piano 8, 50027, Chiocchio (FI)",43.63964,11.3134
+25,191,8,"Viale Sole, 38036, Pera (TN)",46.43544,11.69002
+26,179,7,"Contrada Lauretta, 97 Piano 3, 67041, Aielli (AQ)",42.25391,14.31636
+27,115,6,"Canale Alfonsi, 7 Piano 9, 57124, Livorno (LI)",43.51226,10.33416
+28,64,1,"Contrada Pasquale, 65 Piano 1, 91100, Fontanelle Casasanta (TP)",37.9969,12.54853
+29,152,7,"Stretto Pierina, 84, 85051, Bella (PZ)",40.7345,15.61917
+30,77,2,"Via Golino, 44 Piano 2, 88811, Ciro' Marina (KR)",39.36792,17.12427
+31,95,2,"Rotonda Viviani, 13, 25081, Campagnola (BS)",45.48716,10.40914
+32,78,7,"Viale Mariana, 243 Piano 3, 12023, Caraglio (CN)",44.41263,7.38212
+33,122,4,"Contrada Longhena, 725 Appartamento 0, 61034, Fossombrone (PU)",43.69317,12.81925
+34,38,4,"Vicolo Antonio, 719 Piano 6, 20137, Milano (MI)",45.46125,9.20935
+35,152,8,"Incrocio Baracca, 1 Appartamento 32, 12021, Acceglio (CN)",44.47513,6.98824
+36,98,10,"Rotonda Ammaniti, 73, 90027, Petralia Sottana (PA)",37.80635,14.0908
+37,116,5,"Rotonda Costantino, 30, 80079, Procida (NA)",40.92495,14.15743
+38,103,4,"Via Temistocle, 954 Piano 5, 00196, Roma (RM)",41.93878,12.46911
+39,31,7,"Incrocio Goldoni, 61 Piano 7, 95021, Aci Castello (CT)",37.5551,15.14644
+40,26,9,"Viale Camillo, 5, 24048, Treviolo (BG)",45.67353,9.62293
+41,158,4,"Viale Fiorino, 91, 63843, Montottone (FM)",43.06209,13.58674
+42,188,5,"Canale Foà, 4, 21047, Saronno (VA)",45.62813,9.04546
+43,42,4,"Via Gianmarco, 53026, Monticchiello (SI)",43.06769,11.72472
+44,99,7,"Canale Ginesio, 20855, Peregallo (MB)",45.71584,9.23287
+45,22,2,"Vicolo Fabrizio, 28824, Gonte (VB)",45.99502,8.65148
+46,190,10,"Contrada Musatti, 835, 13037, Bornate Sesia (VC)",45.69734,8.28709
+47,153,6,"Vicolo Lucia, 914, 56029, Staffoli (PI)",43.75694,10.70358
+48,146,7,"Stretto Andreotti, 42035, Vologno Di Sotto (RE)",44.40399,10.43442
+49,105,2,"Strada Arnaldo, 4 Piano 1, 38010, Ruffre' (TN)",46.24866,11.04712
+50,102,5,"Piazza Aldo, 713, 12063, Dogliani (CN)",44.53386,7.93798
+51,176,1,"Canale Jacopo, 2 Appartamento 4, 02044, Forano (RI)",42.2957,12.59514
+52,136,9,"Viale Damiano, 85 Piano 7, 10143, Torino (TO)",45.08645,7.68445
+53,43,1,"Stretto Marcello, 1, 86049, Ururi (CB)",41.8148,15.0115
+54,51,5,"Canale Lando, 48, 14019, Villanova D'Asti (AT)",44.98568,7.98741
+55,68,1,"Canale Dina, 40, 90034, Ficuzza (PA)",37.8827,13.37731
+56,75,1,"Strada Giacinto, 41 Piano 4, 87075, Trebisacce (CS)",39.90478,16.57053
+57,57,5,"Borgo Beffa, 239 Appartamento 4, 44026, Massenzatica (FE)",44.92762,12.17333
+58,120,9,"Contrada Montecchi, 85, 65027, Decontra (PE)",42.24596,14.01632
+59,29,9,"Borgo Achille, 18015, Pompeiana (IM)",43.85407,7.88859
+60,156,1,"Rotonda Anguissola, 3, 51037, Stazione Di Montale (PT)",43.91403,11.0092
+61,196,8,"Rotonda Gemma, 8 Piano 9, 84046, Mandia Di Ascea (SA)",40.12918,15.18844
+62,146,8,"Stretto Sonnino, 12043, Canale (CN)",44.79651,7.98874
+63,58,10,"Rotonda Gramsci, 3, 15044, Quargnento (AL)",44.94498,8.48722
+64,96,10,"Borgo Beppe, 7, 04013, Doganella Di Ninfa (LT)",41.55361,12.95521
+65,146,8,"Contrada Scandone, 33026, Cleulis (UD)",46.5645,13.00407
+66,171,7,"Borgo Ida, 79, 97017, Donnafugata (RG)",36.92528,14.74165
+67,173,6,"Canale Gaiatto, 81 Piano 5, 15033, Roncaglia (AL)",45.07123,8.46925
+68,86,10,"Canale Fattori, 5, 09092, Arborea (OR)",39.7701,8.8103
+69,40,10,"Via Inzaghi, 475, 12036, Staffarda (CN)",44.72053,7.43664
+70,59,9,"Incrocio Niccolò, 842 Appartamento 57, 17020, Rialto (SV)",44.21032,8.28839
+71,66,4,"Canale Angelica, 7 Appartamento 52, 50059, Sant'Amato (FI)",43.80558,10.94106
+72,86,6,"Incrocio Adriana, 12 Appartamento 68, 23893, Cassago Brianza (LC)",45.73779,9.29284
+73,47,8,"Strada Chinnici, 25084, Bogliaco (BS)",45.67549,10.65121
+74,34,7,"Borgo Greco, 722 Appartamento 52, 34122, Trieste (TS)",45.62234,13.82147
+75,24,9,"Stretto Majewski, 1 Appartamento 8, 81049, Mignano Monte Lungo (CE)",41.40484,13.98289
+76,29,9,"Vicolo Dina, 736, 00067, Morlupo (RM)",42.14854,12.50479
+77,41,4,"Canale Toso, 789 Piano 2, 01024, Sermugnano (VT)",42.66888,12.16777
+78,106,10,"Viale Manacorda, 98 Appartamento 1, 08027, Orgosolo (NU)",40.20404,9.34919
+79,194,6,"Borgo Maura, 72 Appartamento 2, 47010, Premilcuore (FC)",43.98007,11.7845
+80,121,4,"Strada Gianna, 71045, Orta Nova (FG)",41.327,15.70644
+81,116,8,"Via Musatti, 955 Piano 4, 13049, Tronzano Vercellese (VC)",45.34209,8.17388
+82,66,1,"Borgo Rossetti, 6, 14046, Bazzana (AT)",44.77778,8.39827
+83,77,7,"Piazza Lollobrigida, 7, 10010, Carema (TO)",45.58406,7.81246
+84,46,6,"Contrada Troisi, 95 Appartamento 86, 00040, Tor San Lorenzo (RM)",41.56742,12.52385
+85,45,1,"Strada Uberto, 03017, Morolo (FR)",41.64828,13.21361
+86,177,8,"Strada Giuseppe, 00021, Affile (RM)",41.88488,13.10203
+87,99,3,"Via Terragni, 238 Piano 4, 09024, Nuraminis (CA)",39.44356,9.01167
+88,39,7,"Piazza Garibaldi, 37011, Bardolino (VR)",45.54923,10.72127
+89,64,4,"Contrada Ottone, 30037, Peseggia (VE)",45.56494,12.18328
+90,180,7,"Contrada Bulzoni, 9 Appartamento 87, 00032, Carpineto Romano (RM)",41.60489,13.08448
+91,118,2,"Canale Licia, 361 Appartamento 28, 48015, Cervia (RA)",44.26451,12.35142
+92,159,6,"Vicolo Santino, 3 Piano 7, 10042, Nichelino (TO)",44.97604,7.62947
+93,195,3,"Via Passalacqua, 0, 08022, Cala Gonone (NU)",40.28108,9.62254
+94,190,7,"Rotonda Telemaco, 10098, Cascine Vica (TO)",45.06983,7.54047
+95,115,6,"Canale Baldassare, 31048, Olmi (TV)",45.67225,12.3288
+96,46,7,"Borgo Farina, 12037, San Lazzaro (CN)",44.65717,7.45922
+97,91,6,"Contrada Rensi, 335, 57122, Livorno (LI)",43.55291,10.31998
+98,30,3,"Piazza Sophia, 62 Piano 6, 28884, Pallanzeno (VB)",46.0442,8.26048
+99,157,3,"Viale Gastone, 569, 03100, Madonna Della Neve (FR)",43.8132,7.67785
+100,126,10,"Strada Petrucci, 54, 81016, Piedimonte Matese (CE)",41.35257,14.36922
+101,93,8,"Vicolo Mattia, 893, 40100, Bologna (BO)",44.49424,11.35257
+102,188,9,"Via del Brennero, 38012, Segno (TN)",45.8993,11.03621
+103,55,5,"Rotonda Romolo, 75, 10068, Villafranca Piemonte (TO)",44.78065,7.50043
+104,68,2,"Stretto Abate, 99 Piano 1, 90031, Belmonte Mezzagno (PA)",38.04687,13.39302
+105,34,8,"Borgo Ferrata, 4, 35011, Campodarsego (PD)",45.50142,11.90948
+106,179,2,"Via Pellegrino, 41, 35133, Padova (PD)",45.41428,11.87091
+107,139,8,"Strada Griselda, 28 Appartamento 0, 98154, Messina (ME)",38.25174,15.49111
+108,52,1,"Borgo Pignatti, 26, 26043, Persico Dosimo (CR)",45.18313,10.10118
+109,94,6,"Stretto Piergiuseppe, 0 Piano 1, 20145, Milano (MI)",45.46981,9.15848
+110,173,1,"Strada Ninetta, 24, 80023, Caivano (NA)",40.95503,14.30427
+111,77,4,"Strada Pomponio, 9, 15057, Passalacqua (AL)",44.89893,8.867
+112,143,6,"Via Roma, 25012, Mezzane (BS)",45.34958,10.34317
+113,65,6,"Incrocio Guicciardini, 73, 15076, Gnocchetto (AL)",44.58752,8.66235
+114,114,7,"Contrada Melina, 17, 72027, San Pietro Vernotico (BR)",40.48504,18.00158
+115,69,1,"Vicolo Annetta, 6 Appartamento 72, 87047, San Pietro In Guarano (CS)",39.34181,16.31111
+116,70,5,"Rotonda Alessia, 29, 98161, Messina (ME)",38.13216,15.52244
+117,36,7,"Via Gemito, 0 Piano 0, 08024, Mamoiada (NU)",40.21459,9.28452
+118,28,6,"Incrocio Pacomio, 6 Piano 9, 55022, Fornoli (LU)",44.0047,10.66334
+119,28,10,"Borgo Fuseli, 41 Appartamento 9, 95025, Santa Maria La Stella (CT)",37.62578,15.13126
+120,68,1,"Vicolo Milena, 72 Piano 0, 18023, Cosio Di Arroscia (IM)",44.0789,7.83258
+121,115,8,"Incrocio Azeglio, 36 Appartamento 6, 85059, Viggiano (PZ)",40.33958,15.89717
+122,195,9,"Borgo Simonetta, 86 Piano 1, 30026, Summaga (VE)",45.78131,12.79749
+123,24,6,"Borgo Fernanda, 463 Appartamento 6, 70011, Alberobello (BA)",40.78431,17.23792
+124,199,8,"Vicolo Zichichi, 85, 20059, Casarile (MI)",45.31913,9.10534
+125,82,4,"Piazza Priscilla, 84082, Manzi (SA)",41.17691,-89.12807
+126,123,9,"Via Germana, 823 Appartamento 59, 94011, Agira (EN)",37.65664,14.51893
+127,53,10,"Via Bartolomeo, 53 Piano 9, 83014, Ospedaletto D'Alpinolo (AV)",40.93799,14.74528
+128,178,6,"Viale Annalisa, 28 Piano 5, 31023, Castelminio (TV)",45.64389,11.98957
+129,94,3,"Contrada Moschino, 823 Piano 3, 25024, Castelletto (BS)",45.33242,10.21525
+130,170,3,"Contrada Rolando, 723 Piano 3, 14043, Castelnuovo Belbo (AT)",44.80136,8.41107
+131,42,5,"Stretto Tirabassi, 84 Piano 7, 25080, Carzago Della Riviera (BS)",45.52597,10.45715
+132,167,1,"Vicolo Rosina, 194, 86036, Montenero Di Bisaccia (CB)",41.95471,14.78412
+133,136,8,"Viale Calvo, 10 Appartamento 91, 80065, Colli Di Fontanelle (NA)",40.61446,14.41265
+134,174,7,"Stretto Mastandrea, 54, 35020, Arre (PD)",45.34451,11.8701
+135,37,2,"Via Fernanda, 13 Appartamento 7, 00029, Vicovaro (RM)",42.0191,12.90603
+136,43,4,"Stretto Ermanno, 83, 93100, Borgo Petilia (CL)",37.54405,14.05701
+137,57,3,"Piazza Arturo, 40 Piano 4, 00156, Rebibbia (RM)",41.92613,12.56976
+138,67,10,"Via Panfilo, 521, 17037, Pogli (SV)",44.05459,8.06902
+139,80,9,"Piazza Platini, 84 Piano 2, 38025, Dimaro (TN)",46.32497,10.87512
+140,185,10,"Strada Greco, 41100, Freto (MO)",17.50167,-99.18226
+141,142,7,"Via Simonetta, 11 Appartamento 40, 24068, Seriate (BG)",37.15757,-80.41511
+142,100,9,"Borgo Castioni, 3 Appartamento 9, 06019, Calzolaro (PG)",43.34854,12.22592
+143,160,1,"Stretto Berengario, 04015, Priverno (LT)",41.47364,13.17667
+144,76,10,"Stretto Majorana, 57, 67033, Pescocostanzo (AQ)",41.88828,14.0673
+145,158,3,"Contrada Tonia, 4, 26842, Cornovecchio (LO)",45.13751,9.79978
+146,114,1,"Rotonda Verga, 85 Piano 9, 83043, Laceno (AV)",40.80772,15.1149
+147,37,1,"Contrada Nedda, 43, 19037, Santo Stefano Di Magra (SP)",44.16632,9.91991
+148,106,6,"Strada Marino, 641, 10139, Torino (TO)",45.07021,7.64474
+149,116,2,"Piazza Luisa, 11, 20058, Zibido San Giacomo (MI)",45.36856,9.12642
+150,132,8,"Borgo Gelsomina, 59 Piano 4, 25121, Brescia (BS)",45.53367,10.22288
+151,169,8,"Vicolo Ilaria, 675 Piano 3, 27020, Zerbolo' (PV)",45.20647,9.01585
+152,78,1,"Incrocio Cundari, 749 Appartamento 1, 10138, Torino (TO)",45.01748,7.63684
+153,128,7,"Viale Caironi, 6, 67045, Ville Di Lucoli (AQ)",42.30742,13.33062
+154,142,8,"Rotonda Salvini, 90 Appartamento 4, 98056, Mazzarra' Sant'Andrea (ME)",38.08924,15.13701
+155,142,7,"Via Gaggini, 0 Piano 1, 10038, Casabianca (TO)",45.2157,7.9629
+156,116,5,"Contrada Rocco, 36 Piano 2, 66023, Francavilla Al Mare (CH)",42.41546,14.2922
+157,38,2,"Strada Baracca, 9, 50135, Coverciano (FI)",43.77828,11.29628
+158,38,4,"Strada Antonello, 74, 27024, Cilavegna (PV)",45.31101,8.74889
+159,151,7,"Stretto Sante, 66 Piano 2, 31023, Resana (TV)",45.64512,11.99084
+160,166,4,"Rotonda Battelli, 380 Appartamento 5, 56126, Pisa (PI)",43.71931,10.41073
+161,143,7,"Viale Alina, 55 Piano 9, 10042, Stupinigi (TO)",44.99835,7.60797
+162,85,1,"Stretto Vianello, 38093, Terres (TN)",46.30977,11.02284
+163,87,7,"Stretto Cipriano, 7, 70020, Toritto (BA)",40.96916,16.57964
+164,143,4,"Contrada Salvi, 4 Appartamento 25, 85050, Baragiano Scalo (PZ)",40.6803,15.59349
+165,83,6,"Vicolo Bignami, 96 Appartamento 2, 94016, Pietraperzia (EN)",37.41641,14.13605
+166,25,5,"Rotonda Morena, 80 Piano 5, 46014, Ospitaletto Mantovano (MN)",45.15654,10.79006
+167,177,10,"Vicolo Baggio, 51030, Montagnana Pistoiese (PT)",43.95343,10.82589
+168,130,4,"Stretto Cortese, 394, 30170, Venezia Mestre (VE)",45.49749,12.24939
+169,104,5,"Piazza Andreozzi, 17 Appartamento 67, 35029, Pontelongo (PD)",45.24915,12.02037
+170,101,9,"Incrocio Adele, 57, 15027, Pontestura (AL)",45.14184,8.33287
+171,190,2,"Incrocio Pietro, 21 Appartamento 94, 34015, San Rocco (TS)",45.60533,13.75299
+172,121,1,"Rotonda Armando, 16 Appartamento 1, 00076, Lariano (RM)",41.72701,12.83223
+173,138,5,"Vicolo Stoppani, 320 Piano 2, 65029, Torre De' Passeri (PE)",42.24132,13.92674
+174,173,6,"Vicolo Concetta, 33, 70010, Trito (BA)",40.76869,17.36004
+175,132,6,"Via Borgia, 51 Piano 3, 52029, Castiglion Fibocchi (AR)",43.0068,11.6163
+176,70,5,"Via Nina, 0, 63823, Lapedona (FM)",43.11068,13.77484
+177,127,7,"Borgo Martino, 29, 03028, San Giovanni Incarico (FR)",41.4694,13.49159
+178,26,2,"Contrada Allegra, 11, 26865, San Rocco Al Porto (LO)",45.08403,9.69913
+179,130,1,"Incrocio Vasari, 11, 80026, Arpino (NA)",40.87573,14.30714
+180,59,5,"Strada Dovara, 84, 81056, Sparanise (CE)",41.19045,14.09618
+181,196,9,"Viale Fredo, 35 Appartamento 7, 22066, Mariano Comense (CO)",45.69446,9.17483
+182,34,2,"Rotonda Forza, 81049, Caspoli (CE)",41.38158,13.96717
+183,110,9,"Strada Colletti, 32 Appartamento 3, 33030, Flumignano (UD)",45.89118,13.12485
+184,78,3,"Vicolo Sante, 44 Appartamento 82, 20855, Lesmo (MB)",45.6503,9.30833
+185,144,3,"Via Capecchi, 5, 35100, Padova (PD)",45.4437,11.89451
+186,182,5,"Canale Martinelli, 74 Appartamento 3, 92011, Cattolica Eraclea (AG)",37.43832,13.39282
+187,38,5,"Canale Giovine, 5 Piano 1, 40041, Santa Maria Villiana (BO)",44.24388,11.00476
+188,42,10,"Contrada Annunziata, 879, 30014, Boscochiaro (VE)",45.13876,12.11381
+189,29,6,"Strada Badoglio, 45 Appartamento 45, 45039, Stienta (RO)",44.94239,11.54309
+190,24,8,"Piazza Tonino, 85, 13034, Desana (VC)",45.24058,8.36675
+191,143,9,"Via Giradello, 97, 94016, Pietraperzia (EN)",37.41607,14.13263
+192,31,7,"Via Ferrata, 523, 00023, Arsoli (RM)",42.0216,12.74317
+193,179,7,"Contrada Montessori, 63 Piano 0, 27100, Ca' Della Terra (PV)",45.20521,9.19384
+194,108,10,"Borgo Gibilisco, 28 Piano 2, 22071, Cadorago (CO)",45.72409,9.03836
+195,168,1,"Borgo Orazio, 5, 09029, Tuili (SU)",39.71212,8.96079
+196,154,3,"Via Lopresti, 47, 81057, Casi (CE)",41.25866,14.03825
+197,73,3,"Contrada Soffici, 289, 61029, Trasanni (PU)",43.75658,12.6668
+198,123,6,"Incrocio Fernanda, 44, 80046, San Giorgio A Cremano (NA)",40.83068,14.34935
+199,127,8,"Stretto Russo, 92, 35011, Campodarsego (PD)",45.50142,11.90948
+200,117,5,"Viale Lara, 80, 22031, Albavilla (CO)",45.80205,9.18783

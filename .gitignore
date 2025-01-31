@@ -30,3 +30,5 @@ env
 .env
 *.exe
 .DSStore
+environment
+.environment
