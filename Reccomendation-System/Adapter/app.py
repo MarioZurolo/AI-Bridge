@@ -1,29 +1,19 @@
 from flask import Flask, request, jsonify
-from auth import generate_token, verify_token
 import requests
 import logging
-
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-# Aggiorna il livello di logging
-logging.getLogger().setLevel(logging.DEBUG)
+from auth import generate_token, verify_token
+from flask_cors import CORS # Per risolvere il problema di CORS
 
 app = Flask(__name__)
 
+# Abilita CORS per tutte le origini
+CORS(app)
+
+
 SPRING_API_URL = "http://localhost:8080/alloggi/mostra"  # URL dell'API Spring
 
-@app.route("/login", methods=["POST"])
-def login():
-    """ Endpoint per generare un token dopo il login. """
-    data = request.json
-    email = data.get("email")
-    ruolo = data.get("password")  # Es: "USER" o "ADMIN"
 
-    if not email or not ruolo:
-        return jsonify({"error": "Email o password richiesti"}), 400
-
-    token = generate_token(email, ruolo)
-    return jsonify({"token": token})
-
+#Endpoint per chiedere i dati a spring boot
 @app.route("/get_data", methods=["GET"])
 def get_data():
     """ Recupera dati da Spring Boot usando JWT. """
@@ -70,5 +60,15 @@ def get_data():
         return jsonify({"error": "Errore durante la richiesta a Spring Boot", "details": str(e)}), 500
 
 
-if __name__ == "__main__":
+# Endpoint per inviare dati da Spring Boot
+@app.route('/send_data', methods=['POST'])
+def receive_data_from_spring():
+    try:
+        json_data = request.get_json()
+        print("Dati ricevuti da Spring:", json_data)
+        return jsonify({"message": "Dati ricevuti con successo"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == '__main__':
     app.run(debug=True, port=5000)
