@@ -1,11 +1,21 @@
 import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer
-from sklearn.metrics import precision_score, recall_score, f1_score
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 import os
-import matplotlib.pyplot as plt
+import nltk
+from nltk.corpus import stopwords
+import string
 import logging
 from sklearn.metrics.pairwise import cosine_similarity
+import matplotlib.pyplot as plt
+from collections import defaultdict
+
+# Scarica le stopwords solo una volta
+nltk.download('stopwords')
+
+# Stopwords in italiano
+stopwords_it = set(stopwords.words('italian'))
 
 # Configurazione logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -16,21 +26,23 @@ refugees_df = pd.read_csv(os.path.join(base_path, 'rifugiati.csv'))
 lavori_df = pd.read_csv(os.path.join(base_path, 'Annunci_di_lavoro.csv'), sep=';')
 ground_truth_df = pd.read_csv(os.path.join(base_path, 'Ground_True.csv'), sep=';')
 
-# Verifica colonne necessarie
-ground_truth_dict = ground_truth_df.set_index('Rifugiati')['Annunci'].to_dict()
 
-# Stopwords manuali
-stopwords = set("""
-    a adesso ai al alla allo allora altre altri altro anche ancora avere aveva avevano ben buono che chi cinque comprare
-    con consecutivi consecutivo cosa cui da del della dello dentro deve devo di dove due e è ecco fare fine fino fra gente giu
-    ha hai hanno ho il indietro invece io la lavoro le lei lo loro lui lungo ma me meglio molta molti molto nei nella no noi
-    nome nostro nove nuovi nuovo o oltre ora otto peggio pero persone piu poco primo promesso qua quarto quasi quattro quello
-    questo qui quindi quinto rispetto sara secondo sei sembra sembrava senza sette sia siamo siete solo sono sopra soprattutto
-    sotto stati stato stesso su subito sul sulla tanto te tempo terzo tra tre triplo ultimo un una uno va vai voi volte vostro /
-""".split())
 
+# Creazione dizionario per ground truth
+ground_truth_dict = defaultdict(set)
+for _, row in ground_truth_df.iterrows():
+    print(row)
+    if row['Match'] == 1:
+        ground_truth_dict[row['Rifugiati']].add(row['Annunci'])
+
+# Funzione migliorata per rimuovere stopwords e punteggiatura
 def remove_stopwords(text):
-    return ' '.join(word for word in text.split() if word.lower() not in stopwords)
+    if not isinstance(text, str):
+        return ""  # Se il valore non è una stringa, restituisce una stringa vuota
+    text = text.lower()  # Converti in minuscolo
+    text = text.translate(str.maketrans("", "", string.punctuation))  # Rimuove punteggiatura
+    return ' '.join(word for word in text.split() if word not in stopwords_it)
+
 
 # Pre-elaborazione dei testi
 columns_to_clean = {
@@ -60,51 +72,36 @@ def evaluate_model(model_name):
     }
 
     logging.info(f"Calcolo similarità per {model_name}...")
-    weights = {'Skill': 0.4, 'Titolo di studio': 0.05, 'Lingue parlate': 0.05}
+    weights = {'Skill': 0.1, 'Titolo di studio': 0.05, 'Lingue parlate': 0.05}
     similarity_matrix = sum(
         weights[key] * cosine_similarity(refugees_embeddings[key], lavori_embeddings['Titolo Annuncio'])
         for key in weights
     )
     similarity_matrix += sum(
         w * cosine_similarity(refugees_embeddings['Skill'], lavori_embeddings[k])
-        for k, w in {'Posizione Lavorativa': 0.3, 'Info Utili': 0.3}.items()
+        for k, w in {'Posizione Lavorativa': 0.26, 'Info Utili': 0.54}.items()
     )
 
-    global_threshold = np.percentile(similarity_matrix, 75)
     matches, true_labels, predicted_labels = [], [], []
     
     for i, similarities in enumerate(similarity_matrix):
-        top_indices = np.argsort(similarities)[-3:][::-1]
+        top_indices = np.argsort(similarities)[-3:][::-1]  # Primi 3 annunci più simili
         refugee_name = refugees_df.iloc[i]['Email']
-        ground_truth_id = ground_truth_dict.get(refugee_name)
-        found_match = False
+        print(f"Refugee Email: {refugee_name}, Ground Truth: {ground_truth_dict.get(refugee_name, set())}")
 
-        for idx in top_indices:
-            if similarities[idx] >= global_threshold:
-                found_match = True
-                matches.append({
-                    "Rifugiato": refugee_name,
-                    "ID Annuncio": lavori_df.iloc[idx]["ID"],
-                    "Titolo Annuncio": lavori_df.iloc[idx]["Titolo Annuncio"],
-                    "Somiglianza": similarities[idx]
-                })
-        
-        if not found_match:
-            best_idx = np.argmax(similarities)
-            matches.append({
-                "Rifugiato": refugee_name,
-                "ID Annuncio": lavori_df.iloc[best_idx]["ID"],
-                "Titolo Annuncio": lavori_df.iloc[best_idx]["Titolo Annuncio"],
-                "Somiglianza": similarities[best_idx]
-            })
+        # Controlla se almeno uno dei tre annunci suggeriti è nel ground truth
+        true_match = any(lavori_df.iloc[idx]['ID'] in ground_truth_dict.get(refugee_name, set()) for idx in top_indices)
 
-        true_labels.append(1 if ground_truth_id else 0)
-        predicted_labels.append(1 if ground_truth_id and any(lavori_df.iloc[idx]['ID'] == ground_truth_id for idx in top_indices) else 0)
+        true_labels.append(1 if true_match else 0)
+
+        max_similarity = max(similarities[idx] for idx in top_indices)
+        threshold = np.percentile(similarity_matrix, 85)
+        predicted_labels.append(1 if max_similarity >= threshold else 0)
 
     precision = precision_score(true_labels, predicted_labels, zero_division=0)
     recall = recall_score(true_labels, predicted_labels, zero_division=0)
     f1 = f1_score(true_labels, predicted_labels, zero_division=0)
-    accuracy = np.mean(np.array(true_labels) == np.array(predicted_labels))
+    accuracy = accuracy_score(true_labels, predicted_labels)
 
     return {"model": model_name, "precision": precision, "recall": recall, "f1_score": f1, "accuracy": accuracy}
 

@@ -8,7 +8,7 @@ import pandas as pd
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # API Key HERE Maps
-API_KEY = "4yFVuX610YULljA2eHq_-NIfrv3BBj7Bt6pWqjA-PHo"
+API_KEY = "aGTkhZ023BjqoA7CUYt1kFP9IyiBxCjJE5wx37IhHZU"
 
 # Dati di esempio
 risultati = [
@@ -42,6 +42,7 @@ def get_route_info(origin, destination, mode="car"):
         response = requests.get(routing_url, timeout=5)
         response.raise_for_status()
         data = response.json()
+        logging.info(f"API Response: {data}")
         if "routes" in data:
             summary = data["routes"][0]["sections"][0]["summary"]
             distance_km = summary["length"] / 1000
