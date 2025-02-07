@@ -32,3 +32,7 @@ env
 .DSStore
 environment
 .environment
+
+### VENV ###
+venv
+.venv
