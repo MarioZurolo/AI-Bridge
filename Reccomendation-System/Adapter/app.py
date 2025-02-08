@@ -3,6 +3,19 @@ import requests
 import logging
 from auth import generate_token, verify_token
 from flask_cors import CORS # Per risolvere il problema di CORS
+from sqlalchemy import create_engine
+import pymysql
+
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'RAG')))
+from raccomandazioneLavori import match_jobs
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..','..','ModuloFia')))
+
+#sys.path.append('/Users/mariozurolo/AI-Bridge/ModuloFia')
+from Connector import get_db_connection
 
 app = Flask(__name__)
 
@@ -65,10 +78,22 @@ def get_data():
 def receive_data_from_spring():
     try:
         json_data = request.get_json()
-        print("Dati ricevuti da Spring:", json_data)
-        return jsonify({"message": "Dati ricevuti con successo"}), 200
+        email = json_data.get("email")  # Ottieni l'email dal JSON ricevuto
+
+        if not email:
+            return jsonify({"error": "Email non fornita"}), 400
+
+        db_connection = get_db_connection()
+        recommendations = match_jobs(email, db_connection)  # Invoca la funzione
+
+        return jsonify({"recommendations": recommendations}), 200
+
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+    finally:
+        if 'db_connection' in locals():
+            db_connection.close()  # Chiudi la connessione
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
