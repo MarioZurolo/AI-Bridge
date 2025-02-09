@@ -17,6 +17,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..','..
 #sys.path.append('/Users/mariozurolo/AI-Bridge/ModuloFia')
 from Connector import get_db_connection
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Location')))
+from matchLocation import match_housing
+
 app = Flask(__name__)
 
 # Abilita CORS per tutte le origini
@@ -86,7 +89,12 @@ def receive_data_from_spring():
         db_connection = get_db_connection()
         recommendations = match_jobs(email, db_connection)  # Invoca la funzione
 
-        return jsonify({"recommendations": recommendations}), 200
+        best_housing = match_housing(recommendations, db_connection)
+        
+        return jsonify({
+            "recommendations": recommendations,
+            "best_housing": best_housing
+        }), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
