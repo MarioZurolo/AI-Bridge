@@ -8,7 +8,7 @@ import pandas as pd
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # API Key HERE Maps
-API_KEY = "aGTkhZ023BjqoA7CUYt1kFP9IyiBxCjJE5wx37IhHZU"
+API_KEY = "Zd69mVUjvr-570Ex5u1Nu52-zvYyUzAeD1jKaxLcouk"
 
 # Dati di esempio
 risultati = [
@@ -28,8 +28,14 @@ alloggi = [
 lavori_df = pd.DataFrame(risultati)
 alloggi_df = pd.DataFrame(alloggi)
 
+route_cache = {}  # Dizionario per memorizzare le risposte API
+
 # Funzione per ottenere informazioni sul percorso
 def get_route_info(origin, destination, mode="car"):
+    key = (origin, destination, mode)
+    if key in route_cache:
+        return route_cache[key]  
+
     lat1, lon1 = origin
     lat2, lon2 = destination
     routing_url = (
@@ -43,19 +49,22 @@ def get_route_info(origin, destination, mode="car"):
         response.raise_for_status()
         data = response.json()
         logging.info(f"API Response: {data}")
-        if "routes" in data:
+
+        if "routes" in data and len(data["routes"]) > 0:
             summary = data["routes"][0]["sections"][0]["summary"]
             distance_km = summary["length"] / 1000
             travel_time_min = summary["duration"] // 60
             transport_bonus = 1 if mode == "publicTransport" else 0
+            route_cache[key] = (distance_km, travel_time_min)
             return distance_km, travel_time_min, transport_bonus
-    except requests.RequestException as e:
-        logging.error(f"Errore nella richiesta per il percorso da {origin} a {destination}: {e}")
 
-    return float('inf'), float('inf'), 0  # Penalità se non trovata la strada
+    except requests.RequestException as e:
+        logging.error(f"Errore richiesta HERE API: {e}")
+
+    return float('inf'), float('inf') 
 
 # Funzione per generare la popolazione iniziale
-def generate_population(size):
+def generate_population(size, alloggi_df, lavori_df):
     population = []
     for _ in range(size):
         solution = {rifugiato['ID Annuncio']: random.choice(alloggi_df['ID'].tolist()) for rifugiato in risultati}
@@ -71,13 +80,15 @@ def fitness(solution):
     time_bonus_weight = 5       # Fattore di premio per il tempo (se il tempo è breve)
 
     for rifugiato_id, alloggio_id in solution.items():
-        job = lavori_df[lavori_df['ID Annuncio'] == rifugiato_id].iloc[0]
+        job = lavori_df[lavori_df['id_annuncio'] == rifugiato_id].iloc[0]
         job_coords = (job['latitudine'], job['longitudine'])
-        alloggio = alloggi_df[alloggi_df['ID'] == alloggio_id].iloc[0]
+
+        alloggio = alloggi_df[alloggi_df['id_alloggio'] == alloggio_id].iloc[0]
         alloggio_coords = (alloggio['latitudine'], alloggio['longitudine'])
 
-        dist_km, time_min, _ = get_route_info(job_coords, alloggio_coords)
+        dist_km, time_min = get_route_info(job_coords, alloggio_coords)
 
+        
         # Penalizza la distanza
         total_score -= dist_km * distance_penalty_weight
 
@@ -92,7 +103,7 @@ def fitness(solution):
         # Premia il tempo (se il tempo di viaggio è inferiore a una soglia, es. 30 minuti)
         if time_min < 30:
             total_score += (30 - time_min) * time_bonus_weight
-            
+    
     return total_score
 
 # Funzione di selezione (Selezione per torneo)
@@ -122,37 +133,46 @@ def strong_mutation(solution):
     solution[rifugiato] = random.choice(alloggi_df['ID'].tolist())
     return solution
 
-def genetic_algorithm(generations=10, population_size=10):
-    population = generate_population(population_size)
+def genetic_algorithm(generations=10, population_size=10, early_stop_threshold=5):
+    population = generate_population(population_size, alloggi_df, lavori_df)
     best_solution = None
-    best_score = float('inf')
+    best_score = float('inf')  
+    no_improve_count = 0  # Contatore per iterazioni senza miglioramenti
 
     for generation in range(generations):
         selected = tournament_selection(population)
         new_generation = []
-        
+
         while len(new_generation) < population_size:
             p1, p2 = random.sample(selected, 2)
             child1, child2 = two_point_crossover(p1, p2)
             child1 = strong_mutation(child1)
             child2 = strong_mutation(child2)
             new_generation.extend([child1, child2])
-        
+
         population = new_generation
-
-        # Calcola il miglior risultato di questa generazione
-        current_best = max(population, key=lambda x: fitness(x))
+        current_best = max(population, key=lambda x: fitness(x))  # Se fitness va massimizzato
         current_best_score = fitness(current_best)
-        
 
-        if current_best_score < best_score:
+        if current_best_score < best_score: 
             best_solution = current_best
             best_score = current_best_score
-        
+            no_improve_count = 0  # Reset contatore
+        else:
+            no_improve_count += 1  # Incrementa contatore se non ci sono miglioramenti
+
         # Stampa il miglior risultato ogni 10 generazioni
         if generation % 10 == 0 or generation == generations - 1:
             logging.info(f"Generazione {generation}, miglior punteggio: {best_score}")
         
+
+        # **Se per 5 generazioni non migliora, interrompi**
+        if no_improve_count >= early_stop_threshold:
+            logging.info(f"Stop anticipato alla generazione {generation}: nessun miglioramento nelle ultime {early_stop_threshold} generazioni.")
+            break
+
+
+
     return best_solution
 
 # Funzione per stampare tutte le distanze e i tempi di viaggio

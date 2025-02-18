@@ -5,7 +5,7 @@ from auth import generate_token, verify_token
 from flask_cors import CORS # Per risolvere il problema di CORS
 from sqlalchemy import create_engine
 import pymysql
-
+import json
 import sys
 import os
 
@@ -23,10 +23,16 @@ from matchLocation import match_housing
 app = Flask(__name__)
 
 # Abilita CORS per tutte le origini
-CORS(app)
+# Configurazione CORS: consenti richieste da React (localhost:3000)
+CORS(app, resources={r"/*": {"origins": "http://localhost:5174"}})
 
 
 SPRING_API_URL = "http://localhost:8080/alloggi/mostra"  # URL dell'API Spring
+
+
+@app.route('/')
+def home():
+    return 'Server Flask in esecuzione!'
 
 
 #Endpoint per chiedere i dati a spring boot
@@ -81,27 +87,33 @@ def get_data():
 def receive_data_from_spring():
     try:
         json_data = request.get_json()
-        email = json_data.get("email")  # Ottieni l'email dal JSON ricevuto
+        email = json_data.get("email")
+        logging.info(f"📩 Email ricevuta dal frontend: {email}")
 
         if not email:
             return jsonify({"error": "Email non fornita"}), 400
 
         db_connection = get_db_connection()
-        recommendations = match_jobs(email, db_connection)  # Invoca la funzione
-
+        recommendations = match_jobs(email, db_connection)
         best_housing = match_housing(recommendations, db_connection)
-        
-        return jsonify({
+
+        response_data = {
             "recommendations": recommendations,
             "best_housing": best_housing
-        }), 200
+        }
+
+        logging.info(f"📤 JSON restituito al frontend:\n{json.dumps(response_data, indent=2)}")
+
+        return jsonify(response_data), 200
 
     except Exception as e:
+        logging.exception("❌ Errore nel backend")
         return jsonify({"error": str(e)}), 500
 
     finally:
         if 'db_connection' in locals():
-            db_connection.close()  # Chiudi la connessione
+            db_connection.close()
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

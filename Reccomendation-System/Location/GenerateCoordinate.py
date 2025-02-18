@@ -4,7 +4,7 @@ import time
 import os
 
 # Sostituisci con la tua chiave API
-API_KEY = "aGTkhZ023BjqoA7CUYt1kFP9IyiBxCjJE5wx37IhHZU"
+API_KEY = "Zd69mVUjvr-570Ex5u1Nu52-zvYyUzAeD1jKaxLcouk"
 
 def get_coordinates(address):
     geocode_url = f"https://geocode.search.hereapi.com/v1/geocode?q={address}&apiKey={API_KEY}"

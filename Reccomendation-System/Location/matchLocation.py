@@ -13,11 +13,11 @@ import sqlite3
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # API Key HERE Maps
-API_KEY = "9ACYaFQNcHs-xlA9MY6pk148Z5MzEhko0I8zhqih1CE"
+API_KEY = "Zd69mVUjvr-570Ex5u1Nu52-zvYyUzAeD1jKaxLcouk"
 
 # Funzione per caricare province -> regione
 def load_province_region_mapping():
-    df = pd.read_csv("/Users/mariozurolo/AI-Bridge/Reccomendation-System/Location/province.csv", sep=";")  # Aggiungi sep=";"
+    df = pd.read_csv("C:/Users/benny/Bridge-AI/AI-Bridge/Reccomendation-System/Location/province.csv", sep=";")  # Aggiungi sep=";"
     return dict(zip(df["provincia"], df["regione"]))
 
 
@@ -32,9 +32,14 @@ JOIN indirizzo ind ON alloggio.indirizzo = ind.id
 WHERE ind.latitudine != 0 AND ind.longitudine != 0;
 """
 
+route_cache = {}  # Dizionario per memorizzare le risposte API
 
 # **Ottenere informazioni sul percorso**
 def get_route_info(origin, destination, mode="car"):
+    key = (origin, destination, mode)
+    if key in route_cache:
+        return route_cache[key]  # Usa la cache se il percorso è già stato calcolato
+
     lat1, lon1 = origin
     lat2, lon2 = destination
     routing_url = (
@@ -48,19 +53,17 @@ def get_route_info(origin, destination, mode="car"):
         response.raise_for_status()
         data = response.json()
 
-        print("Risposta API:", data)  # Puoi rimuovere questa linea dopo il debug
-
         if "routes" in data and len(data["routes"]) > 0:
             summary = data["routes"][0]["sections"][0]["summary"]
             distance_km = summary["length"] / 1000
             travel_time_min = summary["duration"] // 60
+            route_cache[key] = (distance_km, travel_time_min)  # Memorizza il risultato
             return distance_km, travel_time_min
-        else:
-            logging.error("Errore: Nessuna rotta trovata nella risposta.")
-            return float('inf'), float('inf')  # Restituisci valori infiniti in caso di errore
+
     except requests.RequestException as e:
         logging.error(f"Errore richiesta HERE API: {e}")
-    return float('inf'), float('inf')
+
+    return float('inf'), float('inf')  # Penalizza il percorso se non è disponibile
 
 # **Generazione popolazione iniziale**
 def generate_population(size, alloggi_df, lavori_df):
@@ -121,40 +124,40 @@ def strong_mutation(solution, alloggi_df):
     return solution
 
 # **Algoritmo genetico**
-def genetic_algorithm(alloggi_df, lavori_df, generations=10, population_size=10):
-    print("Algoritmo genetico in esecuzione...")
+def genetic_algorithm(alloggi_df, lavori_df, generations=10, population_size=10, early_stop_threshold=5):
     population = generate_population(population_size, alloggi_df, lavori_df)
-    print("Popolazione iniziale generata.")
-    best_solution, best_score = None, float('-inf')
+    best_solution = None
+    best_score = float('-inf')  # Se fitness va massimizzato, usa '-inf'. Se minimizzato, usa 'inf'.
+    no_improve_count = 0  # Contatore per iterazioni senza miglioramenti
 
     for generation in range(generations):
-        print(f"Generazione {generation}")
         selected = tournament_selection(population, lavori_df, alloggi_df)
-        print("Selezione torneo completata.")
         new_generation = []
-        
+
         while len(new_generation) < population_size:
             p1, p2 = random.sample(selected, 2)
             child1, child2 = two_point_crossover(p1, p2)
             child1 = strong_mutation(child1, alloggi_df)
             child2 = strong_mutation(child2, alloggi_df)
             new_generation.extend([child1, child2])
-        
+
         population = new_generation
-        
-        # Pass the alloggi_df and lavori_df to fitness using lambda
-        current_best = max(population, key=lambda sol: fitness(sol, alloggi_df, lavori_df))
-        print("current_best:", current_best)
+        current_best = max(population, key=lambda x: fitness(x, alloggi_df, lavori_df))  # Se fitness va massimizzato
         current_best_score = fitness(current_best, alloggi_df, lavori_df)
 
-        if current_best_score > best_score:
+        if current_best_score > best_score:  # Se fitness va massimizzato
             best_solution = current_best
             best_score = current_best_score
-        
-        if generation % 10 == 0 or generation == generations - 1:
-            logging.info(f"Generazione {generation}, miglior punteggio: {best_score}")
+            no_improve_count = 0  # Reset contatore
+        else:
+            no_improve_count += 1  # Incrementa contatore se non ci sono miglioramenti
 
-    return best_solution
+        # **Se per 5 generazioni non migliora, interrompi**
+        if no_improve_count >= early_stop_threshold:
+            logging.info(f"Stop anticipato alla generazione {generation}: nessun miglioramento nelle ultime {early_stop_threshold} generazioni.")
+            break
+
+    return best_solution 
 
 
 def match_housing(job_recommendations, db_connection):

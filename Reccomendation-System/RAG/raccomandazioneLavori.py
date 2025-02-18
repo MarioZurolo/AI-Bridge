@@ -5,6 +5,9 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 import logging
 import ast
+from functools import lru_cache  # Per la cache in memoria
+import time
+from collections import OrderedDict
 
 # Configurazione logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -17,11 +20,13 @@ JOBS_EMBEDDINGS_PATH = os.path.join(BASE_PATH, "lavori_embeddings.csv")
 model = SentenceTransformer('multi-qa-mpnet-base-dot-v1')
 
 
+@lru_cache(maxsize=1)  # Mantiene la cache di una sola istanza del file
 def load_job_embeddings():
     """Carica il dataframe con gli embeddings dei lavori, se esiste."""
-    if os.path.exists(JOBS_EMBEDDINGS_PATH):
-        return pd.read_csv(JOBS_EMBEDDINGS_PATH)
-    return None
+    global _jobs_embeddings_cache
+    if _jobs_embeddings_cache is None and os.path.exists(JOBS_EMBEDDINGS_PATH):
+        _jobs_embeddings_cache = pd.read_csv(JOBS_EMBEDDINGS_PATH)
+    return _jobs_embeddings_cache
 
 
 def compute_embedding(text):
@@ -30,12 +35,10 @@ def compute_embedding(text):
 
 
 def get_refugee_data(email, db_connection):
-    """Recupera i dati del rifugiato dal database."""
     query = """
     SELECT skill, lingue_parlate, titolo_di_studio FROM utente WHERE email = %s
     """
-    df = pd.read_sql(query, db_connection, params=(email,))
-    return df.iloc[0] if not df.empty else None
+    return pd.read_sql(query, db_connection, params=(email,))
 
 
 def get_job_data(db_connection):
@@ -45,10 +48,33 @@ def get_job_data(db_connection):
     """
     return pd.read_sql(query, db_connection)
 
+# Cache per le raccomandazioni (salva max 100 risultati)
+recommendations_cache = OrderedDict()
+
+def get_cached_recommendation(email):
+    """Recupera le raccomandazioni dalla cache se disponibili e recenti."""
+    if email in recommendations_cache:
+        cached_data, timestamp = recommendations_cache[email]
+        if time.time() - timestamp < 3600:  # 1 ora di cache
+            return cached_data
+    return None
+
+def save_recommendation_to_cache(email, data):
+    """Salva le raccomandazioni in cache con un timestamp."""
+    recommendations_cache[email] = (data, time.time())
+    if len(recommendations_cache) > 100:  # Mantiene max 100 risultati
+        recommendations_cache.popitem(last=False)
 
 def match_jobs(refugee_email, db_connection):
     """Trova i 3 migliori annunci di lavoro per il rifugiato."""
     logging.info(f"Inizio raccomandazione per {refugee_email}")
+
+    # Controlla se la raccomandazione è già in cache
+    cached_result = get_cached_recommendation(refugee_email)
+    if cached_result:
+        logging.info(f"Restituzione dalla cache per {refugee_email}")
+        return cached_result
+
     refugee = get_refugee_data(refugee_email, db_connection)
     if refugee is None:
         logging.warning("Rifugiato non trovato nel database")
@@ -67,19 +93,10 @@ def match_jobs(refugee_email, db_connection):
         matching_row = jobs_embeddings_df[jobs_embeddings_df['id'] == job_id] if jobs_embeddings_df is not None else None
         
         if matching_row is not None and not matching_row.empty:
-            # Verifica se i testi coincidono
-            stored_title = matching_row.iloc[0]['titolo']
-            stored_position = matching_row.iloc[0]['posizione_lavorativa']
-            stored_info = matching_row.iloc[0]['info_utili']
-            
-            if (stored_title == job['titolo'] and
-                stored_position == job['posizione_lavorativa'] and
-                stored_info == job['info_utili']):
-                # Usa embedding già calcolato
-                embedding_str = matching_row.iloc[0]['embedding']
-                embedding_array = np.array(ast.literal_eval(embedding_str))  # Converte la stringa in array
-                jobs_embeddings.append(embedding_array)                
-                continue
+            embedding_str = matching_row.iloc[0]['embedding']
+            embedding_array = np.array(ast.literal_eval(embedding_str))
+            jobs_embeddings.append(embedding_array)
+            continue
         
         # Calcola nuovo embedding
         new_embedding = compute_embedding(f"{job['titolo']} {job['posizione_lavorativa']} {job['info_utili']}")
@@ -107,11 +124,15 @@ def match_jobs(refugee_email, db_connection):
     # Trova i 3 migliori match
     top_indices = np.argsort(similarities)[-3:][::-1]
     top_matches = [{
-    "id": int(jobs_df.iloc[idx]['id']),  # Converte np.int64 in int
-    "titolo": jobs_df.iloc[idx]['titolo'],
-    "similarita": float(similarities[idx])  # Converte np.float32 in float
+        "id": int(jobs_df.iloc[idx]['id']),
+        "titolo": jobs_df.iloc[idx]['titolo'],
+        "similarita": float(similarities[idx])
     } for idx in top_indices]
 
     
     logging.info(f"Top 3 match per {refugee_email}: {top_matches}")
+
+    # Salva in cache il risultato
+    save_recommendation_to_cache(refugee_email, top_matches)
+
     return top_matches
