@@ -23,10 +23,11 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Caricamento dati
 base_path = os.path.join(os.path.dirname(__file__), '..', 'Dat')
 refugees_df = pd.read_csv(os.path.join(base_path, 'rifugiati.csv'))
-lavori_df = pd.read_csv(os.path.join(base_path, 'Annunci_di_lavoro.csv'), sep=';')
+lavori_df = pd.read_csv(os.path.join(base_path, 'Lavori_Uniti.csv'), sep=';')
 ground_truth_df = pd.read_csv(os.path.join(base_path, 'Ground_True.csv'), sep=';')
 
 
+#print("Colonne di lavori_df:", lavori_df.columns)
 
 # Creazione dizionario per ground truth
 ground_truth_dict = defaultdict(set)
@@ -52,7 +53,7 @@ for col, new_col in columns_to_clean.items():
     refugees_df[new_col] = refugees_df[col].fillna('').apply(remove_stopwords)
 
 columns_to_clean_jobs = {
-    'Titolo Annuncio': 'Testo_Titolo_Annuncio', 'Posizione Lavorativa': 'Testo_Posizione', 'Info Utili': 'Testo_Info'
+    'Titolo': 'Testo_Titolo_Annuncio', 'Posizione lavorativa': 'Testo_Posizione', 'Info utili': 'Testo_Info'
 }
 for col, new_col in columns_to_clean_jobs.items():
     lavori_df[new_col] = lavori_df[col].fillna('').apply(remove_stopwords)
@@ -74,12 +75,12 @@ def evaluate_model(model_name):
     logging.info(f"Calcolo similarità per {model_name}...")
     weights = {'Skill': 0.1, 'Titolo di studio': 0.05, 'Lingue parlate': 0.05}
     similarity_matrix = sum(
-        weights[key] * cosine_similarity(refugees_embeddings[key], lavori_embeddings['Titolo Annuncio'])
+        weights[key] * cosine_similarity(refugees_embeddings[key], lavori_embeddings['Titolo'])
         for key in weights
     )
     similarity_matrix += sum(
         w * cosine_similarity(refugees_embeddings['Skill'], lavori_embeddings[k])
-        for k, w in {'Posizione Lavorativa': 0.26, 'Info Utili': 0.54}.items()
+        for k, w in {'Posizione lavorativa': 0.26, 'Info utili': 0.54}.items()
     )
 
     matches, true_labels, predicted_labels = [], [], []

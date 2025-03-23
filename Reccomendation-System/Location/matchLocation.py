@@ -6,6 +6,8 @@ import pandas as pd
 import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..','..','ModuloFia')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Location')))
+
 from Connector import get_db_connection
 import sqlite3
 
@@ -17,7 +19,8 @@ API_KEY = "Zd69mVUjvr-570Ex5u1Nu52-zvYyUzAeD1jKaxLcouk"
 
 # Funzione per caricare province -> regione
 def load_province_region_mapping():
-    df = pd.read_csv("C:/Users/benny/Bridge-AI/AI-Bridge/Reccomendation-System/Location/province.csv", sep=";")  # Aggiungi sep=";"
+    file_path = os.path.join(os.path.dirname(__file__), "province.csv")  # Percorso assoluto
+    df = pd.read_csv(file_path, sep=";")  # Assicurati che il file esista
     return dict(zip(df["provincia"], df["regione"]))
 
 
@@ -36,6 +39,7 @@ route_cache = {}  # Dizionario per memorizzare le risposte API
 
 # **Ottenere informazioni sul percorso**
 def get_route_info(origin, destination, mode="car"):
+    logging.debug(f"Richiesta percorso: {origin} -> {destination} (modalità: {mode})")  
     key = (origin, destination, mode)
     if key in route_cache:
         return route_cache[key]  # Usa la cache se il percorso è già stato calcolato
@@ -53,6 +57,8 @@ def get_route_info(origin, destination, mode="car"):
         response.raise_for_status()
         data = response.json()
 
+        logging.debug(f"Risposta API HERE: {data}")
+
         if "routes" in data and len(data["routes"]) > 0:
             summary = data["routes"][0]["sections"][0]["summary"]
             distance_km = summary["length"] / 1000
@@ -62,7 +68,7 @@ def get_route_info(origin, destination, mode="car"):
 
     except requests.RequestException as e:
         logging.error(f"Errore richiesta HERE API: {e}")
-
+    
     return float('inf'), float('inf')  # Penalizza il percorso se non è disponibile
 
 # **Generazione popolazione iniziale**
@@ -85,6 +91,10 @@ def fitness(solution, alloggi_df, lavori_df):
         alloggio_coords = (alloggio['latitudine'], alloggio['longitudine'])
 
         dist_km, time_min = get_route_info(job_coords, alloggio_coords)
+        
+        ## debug api 
+        if dist_km == float('inf') or time_min == float('inf'):
+            logging.warning(f"API HERE ha restituito valori non validi per il percorso ({job_coords} -> {alloggio_coords})")
 
         # Penalità e bonus
         total_score -= dist_km * 1  # Penalità distanza
@@ -94,21 +104,33 @@ def fitness(solution, alloggi_df, lavori_df):
             total_score -= (time_min - 120) * 0.5  # Penalità tempo
         if time_min < 30:
             total_score += (30 - time_min) * 5  # Bonus tempo breve
-            
+        
+        ### debug fitness 
+        print (f"Job ID: {job_id}, Alloggio ID: {alloggio_id}, Distanza: {dist_km:.2f} km, Tempo: {time_min} min, Punteggio: {total_score:.2f}")
+
     return total_score
 
-# **Selezione per torneo**
+# **Selezione tramite torneo**
 def tournament_selection(population, lavori_df, alloggi_df, tournament_size=3):
+    if len(population) < 2:
+        logging.warning("⚠️ Popolazione troppo piccola per il torneo. Ritorno la popolazione originale.")
+        return population  # Evita errori restituendo la popolazione originale
+    
     selected = []
     for _ in range(len(population) // 2):
-        tournament = random.sample(population, tournament_size)
+        tournament = random.sample(population, min(tournament_size, len(population)))
         tournament.sort(key=lambda sol: fitness(sol, alloggi_df, lavori_df), reverse=True)
         selected.append(tournament[0])
+
     return selected
+
 
 # **Crossover a due punti**
 def two_point_crossover(parent1, parent2):
     length = len(parent1)
+    if length < 2:
+        raise ValueError("Population size is too small for crossover.")  # Ensure enough elements for crossover
+
     point1, point2 = sorted(random.sample(range(length), 2))
     child1, child2 = parent1.copy(), parent2.copy()
     for rifugiato in parent2:
@@ -142,7 +164,7 @@ def genetic_algorithm(alloggi_df, lavori_df, generations=10, population_size=10,
             new_generation.extend([child1, child2])
 
         population = new_generation
-        current_best = max(population, key=lambda x: fitness(x, alloggi_df, lavori_df))  # Se fitness va massimizzato
+        current_best = max(population, key=lambda x: fitness(x, alloggi_df, lavori_df))  # Se fitness va massimizzato  
         current_best_score = fitness(current_best, alloggi_df, lavori_df)
 
         if current_best_score > best_score:  # Se fitness va massimizzato
@@ -156,7 +178,7 @@ def genetic_algorithm(alloggi_df, lavori_df, generations=10, population_size=10,
         if no_improve_count >= early_stop_threshold:
             logging.info(f"Stop anticipato alla generazione {generation}: nessun miglioramento nelle ultime {early_stop_threshold} generazioni.")
             break
-
+    
     return best_solution 
 
 
@@ -222,10 +244,7 @@ def match_housing(job_recommendations, db_connection):
 
     # Caricamento alloggi dal database
     alloggi_df = pd.read_sql_query(query_alloggi, db_connection)
-    logging.info(alloggi_df)
-
-    logging.info(f"Colonne lavori_df: {lavori_df.columns}")
-    logging.info(f"Colonne alloggi_df: {alloggi_df.columns}")
+    
     # Filtraggio alloggi per provincia dei lavori consigliati
     job_provinces = set(lavori_df["provincia"])
     region_clusters = {province_to_region.get(prov, "Sconosciuto") for prov in job_provinces}
@@ -239,7 +258,3 @@ def match_housing(job_recommendations, db_connection):
     best_allocation = genetic_algorithm(alloggi_filtrati, lavori_df)
 
     return best_allocation
-
-
-
-

@@ -16,7 +16,7 @@ DB_CONFIG = {
 CSV_PATH = "lavori_embeddings.csv"
 
 # Caricare il modello per gli embedding
-model = SentenceTransformer('multi-qa-mpnet-base-dot-v1')
+model = SentenceTransformer('modello_finetuned')
 
 def get_jobs_from_db():
     conn = mysql.connector.connect(**DB_CONFIG)

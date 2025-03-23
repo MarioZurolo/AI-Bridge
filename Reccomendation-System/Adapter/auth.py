@@ -32,8 +32,10 @@ def verify_token(token):
 
 if __name__ == "__main__":
     # Genera un token con dati aggiuntivi
+    #profilo admin
     token = generate_token(
-        "rifugiato1@example.com", "Cazzarola69!"
+        "admin@managment.ex", "AdminRoot01!"
     )
+    
     print("Token generato:", token)
     print("Verifica token:", verify_token(token))

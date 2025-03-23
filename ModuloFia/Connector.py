@@ -1,6 +1,12 @@
-from sqlalchemy import create_engine
+import pymysql
+import pandas as pd
 
-# Connessione al database con SQLAlchemy
+# Connessione al database
 def get_db_connection():
-    engine = create_engine('mysql+pymysql://root:root@localhost:3306/bridge')  # Modifica con le tue credenziali
-    return engine.connect()
+    return pymysql.connect(
+        host='localhost',
+        port=3306,
+        user='root',
+        password='guardian',
+        database='bridge',
+    )

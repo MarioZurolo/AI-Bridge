@@ -36,3 +36,7 @@ environment
 ### VENV ###
 venv
 .venv
+
+
+modello_finetuned/
+model.safetensors

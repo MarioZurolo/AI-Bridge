@@ -12,21 +12,36 @@ from collections import OrderedDict
 # Configurazione logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# Variabile globale per la cache
+_jobs_embeddings_cache = None
+_refugee_embeddings_cache = {}
+
 # Percorsi ai file
 BASE_PATH = os.path.dirname(__file__)
 JOBS_EMBEDDINGS_PATH = os.path.join(BASE_PATH, "lavori_embeddings.csv")
 
 # Caricamento modello
-model = SentenceTransformer('multi-qa-mpnet-base-dot-v1')
+model = SentenceTransformer('modello_finetuned')
 
 
-@lru_cache(maxsize=1)  # Mantiene la cache di una sola istanza del file
 def load_job_embeddings():
     """Carica il dataframe con gli embeddings dei lavori, se esiste."""
-    global _jobs_embeddings_cache
+    global _jobs_embeddings_cache  # Dichiarazione della variabile globale
+
     if _jobs_embeddings_cache is None and os.path.exists(JOBS_EMBEDDINGS_PATH):
         _jobs_embeddings_cache = pd.read_csv(JOBS_EMBEDDINGS_PATH)
+
     return _jobs_embeddings_cache
+
+
+def get_refugee_embedding(email, refugee_text):
+    """Recupera l'embedding del rifugiato dalla cache o lo calcola."""
+    if email in _refugee_embeddings_cache:
+        return _refugee_embeddings_cache[email]
+    
+    embedding = compute_embedding(refugee_text)
+    _refugee_embeddings_cache[email] = embedding
+    return embedding
 
 
 def compute_embedding(text):
@@ -35,6 +50,7 @@ def compute_embedding(text):
 
 
 def get_refugee_data(email, db_connection):
+    """Recupera i dati del rifugiato dal database."""
     query = """
     SELECT skill, lingue_parlate, titolo_di_studio FROM utente WHERE email = %s
     """
@@ -90,7 +106,8 @@ def match_jobs(refugee_email, db_connection):
     
     for _, job in jobs_df.iterrows():
         job_id = job['id']
-        matching_row = jobs_embeddings_df[jobs_embeddings_df['id'] == job_id] if jobs_embeddings_df is not None else None
+        if jobs_embeddings_df is not None and job_id in jobs_embeddings_df['id'].values:
+            matching_row = jobs_embeddings_df[jobs_embeddings_df['id'] == job_id]
         
         if matching_row is not None and not matching_row.empty:
             embedding_str = matching_row.iloc[0]['embedding']
@@ -116,7 +133,7 @@ def match_jobs(refugee_email, db_connection):
     
     # Compute refugee embedding
     refugee_text = f"{refugee['skill']} {refugee['lingue_parlate']} {refugee['titolo_di_studio']}"
-    refugee_embedding = compute_embedding(refugee_text)
+    refugee_embedding = get_refugee_embedding(refugee_email, refugee_text)
     
     # Compute cosine similarity
     similarities = cosine_similarity([refugee_embedding], jobs_embeddings)[0]

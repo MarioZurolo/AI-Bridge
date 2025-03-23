@@ -96,7 +96,7 @@ def receive_data_from_spring():
         db_connection = get_db_connection()
         recommendations = match_jobs(email, db_connection)
         best_housing = match_housing(recommendations, db_connection)
-
+                
         response_data = {
             "recommendations": recommendations,
             "best_housing": best_housing
